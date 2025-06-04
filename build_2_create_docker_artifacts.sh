@@ -5,7 +5,7 @@
 IMAGE_NAME="profile"
 
 dotnet publish --os linux --arch x64 /t:PublishContainer -c Release
-docker run -d -p 10102:8080 --restart=always --name $IMAGE_NAME -e "Values:Profile:AppConfigConnection=$1" $IMAGE_NAME:latest
+docker run -d -p 10200:8080 --restart=always --name $IMAGE_NAME -e "Values:Profile:AppConfigConnection=$1" $IMAGE_NAME:latest
 rm -rf /tmp/Containers
 
 # Check if there are any dangling images
