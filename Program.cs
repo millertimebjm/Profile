@@ -1,5 +1,6 @@
 // using Companion.Services.Configuration;
-// using Serilog;
+using Serilog;
+using Serilog.Sinks.Grafana.Loki;
 using System;
 using System.Text.Json;
 
@@ -9,31 +10,36 @@ class Program
 {
     static void Main(string[] args)
     {
-        //var profileAppConfigConnectionStringPath = "Values:AppConfigConnectionString";
 
         var builder = WebApplication.CreateBuilder(args);
 
-        // builder.Configuration.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true);
-        // var connectionString = builder.Configuration[profileAppConfigConnectionStringPath];
-        // ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-        // if (!string.IsNullOrEmpty(connectionString))
-        // {
-        //     builder.Configuration.AddAzureAppConfiguration(connectionString);
-        // }
+        const string profileAppConfigConnectionStringPath = "Values:Profile:AppConfigConnection";
 
-        // Log.Logger = new LoggerConfiguration()
-        //     .ReadFrom.Configuration(builder.Configuration)
-        //     .Enrich.FromLogContext()
-        //     .Enrich.WithProperty("Application", "Profile")
-        //     .Enrich.WithMachineName()
-        //     .Enrich.WithThreadId()
-        //     .WriteTo.Console() // Default to console logging
-        //     .CreateLogger();
-        // builder.Host.UseSerilog();
+        builder.Configuration.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true);
+        var connectionString = builder.Configuration[profileAppConfigConnectionStringPath];
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+        if (!string.IsNullOrEmpty(connectionString))
+        {
+            builder.Configuration.AddAzureAppConfiguration(connectionString);
+        }
+
+        
+
+        builder.Host.UseSerilog();
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .WriteTo.GrafanaLoki("http://media.bltmiller.com:3100", 
+                labels: new[]
+                {
+                    new LokiLabel() {Key = "app", Value = "profile"},
+                    new LokiLabel() {Key = "env", Value = "prod"},
+                })
+            .CreateLogger();
 
         var app = builder.Build();
 
-        app.MapGet("/photos.json", (IConfiguration config) =>
+        app.MapGet("/photos.json", (IConfiguration config, ILogger<Program> logger) =>
         {
             var files = Directory.GetFiles("wwwroot/photos/");
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -45,6 +51,15 @@ class Program
         app.UseDefaultFiles();
         app.UseStaticFiles();
 
-        app.Run();
+        app.UseSerilogRequestLogging();
+
+        try
+        {
+            app.Run();
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 }
