@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brandon Miller - Portfolio</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+
+    nav {
+      margin-top: 0.5rem;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: #555;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #0077cc;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 250px;
+      /* background-image: url('https://source.unsplash.com/1600x900/?code,technology'); */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('background_image.webp');
+      background-size: 100% 100%;
+      height: 250px;
+    }
+
+    .hero-overlay::before {
+	content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .hero h2 {
+      position: relative;
+      color: #fff;
+      font-size: 2.5rem;
+      text-align: center;
+      z-index: 1;
+      margin: 20px;
+    }
+
+    /* Section styles */
+    section {
+      max-width: 900px;
+      margin: 1rem auto;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    section h3 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      margin-bottom: .5rem;
+    }
+
+    .project {
+      margin-bottom: 1rem;
+    }
+
+    .project h4 {
+      margin-bottom: -.5rem;
+    }
+
+    /* Photos grid */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .photo-grid img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Links */
+    ul.links {
+      padding-left: 1.2rem;
+    }
+
+    ul.links li {
+      margin-bottom: 0.5rem;
+    }
+
+    ul.links a {
+      color: #0077cc;
+      text-decoration: none;
+    }
+
+    ul.links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <!-- <a href="#about">About Me</a> -->
+      <a href="photos.html">Photos</a>
+      <!-- <a href="#links">Interesting Links</a> -->
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-overlay"></div>
+    <h2>Brandon Miller</h2>
+    <!-- <h2>Full Stack Software Engineer</h2> -->
+    <!--<h2>Full Stack Software Engineer</h2>-->
+  </div>
+
+  <!-- About -->
+  <section id="about">
+    <h3>Software Engineering Background</h3>
+    <p>
+      Full-Stack Senior Software Engineer with over 13 years of experience delivering scalable, high-impact software solutions across diverse industries. Proven expertise in cloud technologies, particularly Azure, where I led initiatives such as search modernization using Azure AI Search, digital streaming migration using MediaKind, and Event Driven affiliate marketing payout using Azure Service Bus. Adept at Agile methodologies (Scrum, Kanban), process improvement, and mentoring, contributing to team growth and operational excellence. Demonstrated leadership as a Lead Developer, Architect, and Project Manager on critical enterprise tools and data migration systems, driving business continuity and system modernization.
+    </p>
+  </section>
+
+  <section>
+    <h3>Ai Companion</h3>
+
+    <div class="project">
+    <p style="margin-top:-5px;"><a href="https://companion.bltmiller.com">Link</a></p>
+    <p style="margin-top:-10px;"><a href="https://www.github.com/millertimebjm/AiCompanion">Github</a></p>
+
+      <h4>AI Source Selector</h4>
+      <p>
+        Hosting Llama3 for local querying for increased privacy.  Planned list of options for Deepseek as another local option, and other paid options.  Only local options will be available for the Guest users.
+      </p>
+    </div>
+
+    <div class="project">
+      <h4>Project and Service Separation - Docker CI/CD Deployment</h4>
+      <p>
+        <ul>
+          <li>
+            HTML/JS Static Frontend
+            <ul><li>.NET Kestrel for HTTP server and config</li><li>No client-side dependencies for best performance</li></ul>
+          </li>
+          <li>
+            Web API - Backend for Frontend
+            <ul><li>Manages Authentication, Session, User, and next AI request language</li></ul>
+          </li>
+          <li>
+            Web API - LLM Interface
+            <ul><li>The calls to LLM's will be scheduled and service bus message queue driven</li></ul>
+          </li>
+        </ul>
+      </p>
+    </div>
+    <div class="project">
+      <h4>Load Balancing Local LLM Resources</h4>
+      <p>
+        Locally hosted LLM will eventually run into load issues.  Service Bus Message Queue will allow multiple local homelab docker containers (on different servers) to be available to manage the load.
+      </p>
+    </div>
+  </section>
+  
+  <section>
+    <h3>Silvermine Nordic Snow Making</h3>
+
+    <div class="project">
+    <p style="margin-top:-5px;"><a href="https://snowmaking.bltmiller.com">Link</a></p>
+    <p style="margin-top:-10px;"><a href="https://www.github.com/millertimebjm/SilvermineNordic">Github</a></p>
+
+      <h4>Description</h4>
+      <p>The purpose of this Snow Making project is to provide alerts when thresholds are hit for good snow-making weather and options for future automation on-site.  Using a Cellular Notecard from <a href="https://blues.io">Blues.io</a>, I can get more accurate on-site temperature and humidity readings, as well as provide opportunities in the future for alerts and automation related to snow-making equipment in combination with a server processing a variety of inputs.</p>
+
+      <h4>IoT Usage</h4>
+      <p>
+        Since the weather from major API's are localized to the nearest airport to the Silvermine area, which is several miles away, more accurate temperature and humidity readings can be gathered onsite using a cellular IoT device.  This local device uses a temp/humidity sensor with a solar recharged battery bank because we can't use local power.    
+      </p>
+    </div>
+  </section>
+  
+
+  <!-- Projects -->
+  <!-- <section>
+    <h3>Projects</h3>
+
+    <div class="project">
+      <h4>Project Title 1</h4>
+      <p>
+        This project is a full-stack web application that helps users manage tasks using a simple, intuitive interface. Built with React and Node.js.
+      </p>
+    </div>
+
+    <div class="project">
+      <h4>Project Title 2</h4>
+      <p>
+        A data visualization dashboard that pulls real-time data from an API and displays it using interactive charts. Built with D3.js and Flask.
+      </p>
+    </div>
+  </section> -->
+
+  <!-- Photos
+  <section id="photos">
+    <h3>Photos</h3>
+    <div class="photo-grid">
+      <img src="https://source.unsplash.com/300x200/?nature" alt="Photo 1">
+      <img src="https://source.unsplash.com/300x200/?technology" alt="Photo 2">
+      <img src="https://source.unsplash.com/300x200/?coding" alt="Photo 3">
+    </div>
+  </section> -->
+
+  <!-- Interesting Links -->
+  <section id="links">
+    <h3>Interesting Links</h3>
+    <ul class="links">
+      <li><a href="https://github.com/millertimebjm" target="_blank">GitHub Profile</a></li>
+      <li><a href="https://www.linkedin.com/in/brandonjeromemiller" target="_blank">LinkedIn</a></li>
+      <li><a href="https://adventofcode.com/" target="_blank">Advent of Code</a></li>
+    </ul>
+  </section>
+
+</body>
+</html>
+

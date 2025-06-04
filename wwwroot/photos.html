@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Photo Gallery</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    header {
+      background-color: #000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+
+    nav {
+      margin-top: 0.5rem;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: #555;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #0077cc;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 2px;
+      gap: 2px; /* 2px margin between images */
+    }
+
+    .gallery img {
+      height: 200px;
+      flex-grow: 1;
+      object-fit: cover;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    /* Modal (expanded view) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.95);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .close-btn {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      z-index: 1001;
+      background: rgba(0,0,0,0.6);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    @media (max-width: 768px) {
+      .gallery img {
+        height: 150px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery img {
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <!-- <a href="#about">About Me</a> -->
+      <a href="photos.html">Photos</a>
+      <!-- <a href="#links">Interesting Links</a> -->
+    </nav>
+  </header>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div class="modal" id="modal">
+    <span class="close-btn" id="closeBtn">&times;</span>
+    <img id="modalImg" src="" alt="Expanded photo">
+  </div>
+
+  <script>
+    var fetchResponse = fetch("photos.json");
+    fetchResponse.then((fetchValue) => {
+      var jsonResponse = fetchValue.json();
+      jsonResponse.then((photos) => {
+        photos.forEach(function(photo) {
+          document
+            .getElementById("gallery")
+            .innerHTML += `<img src="${photo.filename}" alt="Photo" loading="lazy">`;
+        });
+        afterPhotosEventListeners();
+      });
+    });
+
+    function afterPhotosEventListeners() {
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modalImg');
+      const closeBtn = document.getElementById('closeBtn');
+      const galleryImages = document.querySelectorAll('.gallery img');
+
+      galleryImages.forEach(img => {
+        img.addEventListener('click', () => {
+          modal.style.display = 'flex';
+          modalImg.src = img.src;
+        });
+      });
+
+      closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        modalImg.src = '';
+      });
+
+      modal.addEventListener('click', (e) => {
+        if (e.target !== modalImg) {
+          modal.style.display = 'none';
+          modalImg.src = '';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
