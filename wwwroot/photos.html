@@ -130,7 +130,7 @@
         photos.forEach(function(photo) {
           document
             .getElementById("gallery")
-            .innerHTML += `<img src="${photo.filename}" alt="Photo" loading="lazy">`;
+            .innerHTML += `<img src="${photo}" alt="Photo" loading="lazy">`;
         });
         afterPhotosEventListeners();
       });

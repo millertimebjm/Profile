@@ -1,4 +1,6 @@
 // using Companion.Services.Configuration;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Serilog;
 using Serilog.Sinks.Grafana.Loki;
 using System;
@@ -23,8 +25,6 @@ class Program
             builder.Configuration.AddAzureAppConfiguration(connectionString);
         }
 
-        
-
         builder.Host.UseSerilog();
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -39,12 +39,26 @@ class Program
 
         var app = builder.Build();
 
-        app.MapGet("/photos.json", (IConfiguration config, ILogger<Program> logger) =>
+        app.MapGet("/photos.json", async (IConfiguration config, ILogger<Program> logger) =>
         {
-            var files = Directory.GetFiles("wwwroot/photos/");
+            // Replace with your container or folder SAS URL
+            string sasUrl = config["Profile:PhotoStorage"] ?? "";
+            ArgumentException.ThrowIfNullOrWhiteSpace(sasUrl);
+
+            // Create a BlobContainerClient using the SAS URL
+            BlobContainerClient containerClient = new BlobContainerClient(new Uri(sasUrl));
+
+            List<string> files = new();
+            // List blobs with optional prefix (i.e., virtual directory)
+            await foreach (BlobItem blobItem in containerClient.GetBlobsAsync(prefix: ""))
+            {
+                string blobName = blobItem.Name;
+                string publicUrl = $"{containerClient.Uri.AbsoluteUri}{Uri.EscapeDataString(blobName)}";
+                files.Add(publicUrl);
+            }
+
             var options = new JsonSerializerOptions { WriteIndented = true };
-            var images = files.Select(f => new Image(f.Replace("wwwroot/", ""), "Image"));
-            string jsonString = JsonSerializer.Serialize(images, options);
+            string jsonString = JsonSerializer.Serialize(files, options);
             return Results.Content(jsonString, "application/json");
         });
 
