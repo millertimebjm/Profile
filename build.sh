@@ -1,5 +1,9 @@
-#!/bin/bash
-
-sh build_1_delete_docker_artifacts.sh
-
-sh build_2_create_docker_artifacts.sh $1
+docker build -t profile:latest .
+docker stop profile
+docker rm profile
+docker run -d \
+  -p 10200:8080 \
+  --name profile \
+  --restart always \
+  -e "Values__Profile__AppConfigConnection"="$1" \
+  profile:latest
